@@ -7,15 +7,18 @@ import authRoutes from "./routes/auth";
 
 const app = new Hono();
 
-app.route("/api/auth", authRoutes);
-
 // Allow requests from our Next.js client
 app.use(
-  "*",
+  "/api/*",
   cors({
     origin: "http://localhost:3000",
+    credentials: true,
+    allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowHeaders: ["Content-Type"],
   }),
 );
+
+app.route("/api/auth", authRoutes);
 
 // Health-check route
 app.get("/", (c) => {
