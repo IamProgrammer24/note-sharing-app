@@ -3,6 +3,7 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { setCookie } from "hono/cookie";
 import jwt from "jsonwebtoken";
+import { getUserIdFromSession } from "../lib/auth";
 
 import { prisma } from "../lib/prisma";
 
@@ -175,6 +176,44 @@ authRoutes.post("/login", async (c) => {
       500,
     );
   }
+});
+
+authRoutes.get("/me", async (c) => {
+  const userId = getUserIdFromSession(c);
+
+  if (!userId) {
+    return c.json(
+      {
+        success: false,
+        message: "Authentication required",
+      },
+      401,
+    );
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      email: true,
+      createdAt: true,
+    },
+  });
+
+  if (!user) {
+    return c.json(
+      {
+        success: false,
+        message: "User no longer exists",
+      },
+      401,
+    );
+  }
+
+  return c.json({
+    success: true,
+    user,
+  });
 });
 
 export default authRoutes;
