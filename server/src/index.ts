@@ -3,7 +3,11 @@ import { cors } from "hono/cors";
 import { serve } from "@hono/node-server";
 import { prisma } from "./lib/prisma";
 
+import authRoutes from "./routes/auth";
+
 const app = new Hono();
+
+app.route("/api/auth", authRoutes);
 
 // Allow requests from our Next.js client
 app.use(
