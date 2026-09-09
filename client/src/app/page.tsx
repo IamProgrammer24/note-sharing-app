@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { ArrowRight, Check, Shield, Zap } from "lucide-react";
 
 import api from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+import Link from "next/link";
 
 type ApiResponse = {
   success: boolean;
@@ -30,6 +32,8 @@ export default function Home() {
 
     checkServer();
   }, []);
+
+  const isServerRunning = apiStatus === "Note Sharing API is running";
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -60,10 +64,12 @@ export default function Home() {
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button size="lg">
-              Create a note
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
+            <Link href="/notes/new">
+              <Button size="lg">
+                Create a note
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
 
             <Button size="lg" variant="outline">
               Learn more
@@ -71,20 +77,9 @@ export default function Home() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-primary" />
-              Password protected
-            </span>
-
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-primary" />
-              Expiring links
-            </span>
-
-            <span className="flex items-center gap-2">
-              <Check className="h-4 w-4 text-primary" />
-              One-time access
-            </span>
+            <FeatureCheck>Protected sharing</FeatureCheck>
+            <FeatureCheck>Automatic expiry</FeatureCheck>
+            <FeatureCheck>One-time access</FeatureCheck>
           </div>
         </div>
 
@@ -126,7 +121,7 @@ export default function Home() {
             className={
               isLoading
                 ? "font-medium text-yellow-600"
-                : apiStatus === "Note Sharing API is running"
+                : isServerRunning
                   ? "font-medium text-green-600"
                   : "font-medium text-red-600"
             }
@@ -144,7 +139,7 @@ function Feature({
   title,
   description,
 }: {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
 }) {
@@ -159,5 +154,14 @@ function Feature({
         </p>
       </div>
     </div>
+  );
+}
+
+function FeatureCheck({ children }: { children: ReactNode }) {
+  return (
+    <span className="flex items-center gap-2">
+      <Check className="h-4 w-4 text-primary" />
+      {children}
+    </span>
   );
 }
