@@ -13,13 +13,12 @@ const app = new Hono();
 app.use(
   "*",
   cors({
-    origin: "http://localhost:3000",
+    origin: process.env.CLIENT_URL ?? "http://localhost:3000",
     credentials: true,
     allowMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowHeaders: ["Content-Type"],
+    allowHeaders: ["Content-Type", "Authorization"],
   }),
 );
-
 app.route("/api/auth", authRoutes);
 app.route("/api/notes", notesRoutes);
 app.route("/api/share", shareRoutes);

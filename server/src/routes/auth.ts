@@ -149,10 +149,12 @@ authRoutes.post("/login", async (c) => {
       },
     );
 
+    const isProduction = process.env.NODE_ENV === "production";
+
     setCookie(c, "session", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "Lax",
+      secure: isProduction,
+      sameSite: isProduction ? "None" : "Lax",
       path: "/",
       maxAge: 60 * 60 * 24 * 7,
     });
