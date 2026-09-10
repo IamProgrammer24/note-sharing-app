@@ -54,7 +54,7 @@ app.get("/health/db", async (c) => {
 });
 
 // Start the server
-const port = 5000;
+const port = Number(process.env.PORT ?? 5000);
 
 serve(
   {
