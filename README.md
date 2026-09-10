@@ -4,6 +4,17 @@ A secure note-sharing application built for the MERN/PERN Stack Developer POC as
 
 Users can create notes and share them using secure links. Each link can be public or password-protected and can support either one-time access or time-based expiry.
 
+## Demo Video
+
+[Watch the complete demo video on Google Drive](https://drive.google.com/file/d/1RZ2nUiFinNWnf8KLLlx3ybNikNGE_fPF/view?usp=sharing)
+
+## Test Credentials
+
+Use these disposable credentials to test the application:
+
+- Email: `test@gmail.com`
+- Password: `test@123`
+
 ## Live Demo
 
 - Frontend: https://note-sharing-app-mauve.vercel.app/
