@@ -87,7 +87,8 @@ notesRoutes.post("/", async (c) => {
 
     const { title, content, shareType, accessType, expiresAt } = result.data;
 
-    const normalizedExpiresAt = shareType === "one-time" ? null : expiresAt;
+    const normalizedExpiresAt =
+      shareType === "one-time" ? null : (expiresAt ?? null);
 
     const token = generateShareToken();
     const accessKey = accessType === "password" ? generateAccessKey() : null;

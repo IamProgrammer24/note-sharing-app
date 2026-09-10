@@ -72,15 +72,21 @@ export default function NoteDetailsPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (!noteId) {
-      setError("Invalid note ID");
-      setLoading(false);
+    if (hasLoadedRef.current) {
       return;
     }
 
-    const currentNoteId = noteId;
+    hasLoadedRef.current = true;
 
     async function loadNoteDetails() {
+      if (!noteId) {
+        setError("Invalid note ID");
+        setLoading(false);
+        return;
+      }
+
+      const currentNoteId = noteId;
+
       try {
         const response = await api.get<NoteDetailsResponse>(
           `/api/notes/${encodeURIComponent(currentNoteId)}`,
@@ -88,8 +94,14 @@ export default function NoteDetailsPage() {
 
         setNote(response.data.note);
         setShareLink(response.data.shareLinks[0] ?? null);
-      } catch (error) {
-        setError(getErrorMessage(error));
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          setError(
+            error.response?.data?.message || "Unable to load note details",
+          );
+        } else {
+          setError("Something went wrong");
+        }
       } finally {
         setLoading(false);
       }
@@ -127,8 +139,8 @@ export default function NoteDetailsPage() {
             }
           : current,
       );
-    } catch (error: any) {
-      setError(error.response?.data?.message || "Unable to revoke share link");
+    } catch (error: unknown) {
+      setError(getErrorMessage(error));
     } finally {
       setRevoking(false);
     }

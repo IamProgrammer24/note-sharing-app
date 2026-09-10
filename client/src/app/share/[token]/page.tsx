@@ -53,14 +53,6 @@ export default function SharePage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token) {
-      setError("Invalid share link");
-      setLoading(false);
-      return;
-    }
-
-    const shareToken = token;
-
     if (hasLoadedRef.current) {
       return;
     }
@@ -68,9 +60,17 @@ export default function SharePage() {
     hasLoadedRef.current = true;
 
     async function loadShareLink() {
+      if (!token) {
+        setError("Invalid share link");
+        setLoading(false);
+        return;
+      }
+
+      const currentToken = token;
+
       try {
         const response = await api.get<ShareResponse>(
-          `/api/share/${encodeURIComponent(shareToken)}`,
+          `/api/share/${encodeURIComponent(currentToken)}`,
         );
 
         if (response.data.requiresPassword) {
