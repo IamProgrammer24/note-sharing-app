@@ -3,9 +3,9 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { setCookie } from "hono/cookie";
 import jwt from "jsonwebtoken";
-import { getUserIdFromSession } from "../lib/auth";
+import { getUserIdFromSession } from "../lib/auth.js";
 
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 const authRoutes = new Hono();
 

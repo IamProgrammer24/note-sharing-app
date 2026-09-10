@@ -3,8 +3,8 @@ import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { randomBytes } from "node:crypto";
 
-import { prisma } from "../lib/prisma";
-import { getUserIdFromSession } from "../lib/auth";
+import { prisma } from "../lib/prisma.js";
+import { getUserIdFromSession } from "../lib/auth.js";
 
 const notesRoutes = new Hono();
 

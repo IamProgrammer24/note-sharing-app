@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
-import { prisma } from "../lib/prisma";
+import { prisma } from "../lib/prisma.js";
 
 const shareRoutes = new Hono();
 

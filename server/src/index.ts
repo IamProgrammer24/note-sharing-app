@@ -1,11 +1,11 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { serve } from "@hono/node-server";
-import { prisma } from "./lib/prisma";
+import { prisma } from "./lib/prisma.js";
 
-import authRoutes from "./routes/auth";
-import notesRoutes from "./routes/notes";
-import shareRoutes from "./routes/share";
+import authRoutes from "./routes/auth.js";
+import notesRoutes from "./routes/notes.js";
+import shareRoutes from "./routes/share.js";
 
 const app = new Hono();
 
@@ -19,6 +19,7 @@ app.use(
     allowHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
 app.route("/api/auth", authRoutes);
 app.route("/api/notes", notesRoutes);
 app.route("/api/share", shareRoutes);
