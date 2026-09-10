@@ -4,6 +4,8 @@ import { serve } from "@hono/node-server";
 import { prisma } from "./lib/prisma";
 
 import authRoutes from "./routes/auth";
+import notesRoutes from "./routes/notes";
+import shareRoutes from "./routes/share";
 
 const app = new Hono();
 
@@ -19,6 +21,8 @@ app.use(
 );
 
 app.route("/api/auth", authRoutes);
+app.route("/api/notes", notesRoutes);
+app.route("/api/share", shareRoutes);
 
 // Health-check route
 app.get("/", (c) => {
