@@ -160,4 +160,162 @@ notesRoutes.post("/", async (c) => {
   }
 });
 
+notesRoutes.get("/:id", async (c) => {
+  try {
+    const userId = getUserIdFromSession(c);
+
+    if (!userId) {
+      return c.json(
+        {
+          success: false,
+          message: "Authentication required",
+        },
+        401,
+      );
+    }
+
+    const noteId = c.req.param("id");
+
+    const note = await prisma.note.findFirst({
+      where: {
+        id: noteId,
+        ownerId: userId,
+      },
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        createdAt: true,
+        updatedAt: true,
+        shareLinks: {
+          select: {
+            token: true,
+            shareType: true,
+            accessType: true,
+            expiresAt: true,
+            usedAt: true,
+            revokedAt: true,
+            viewCount: true,
+            createdAt: true,
+          },
+        },
+      },
+    });
+
+    if (!note) {
+      return c.json(
+        {
+          success: false,
+          message: "Note not found",
+        },
+        404,
+      );
+    }
+
+    return c.json({
+      success: true,
+      note: {
+        id: note.id,
+        title: note.title,
+        content: note.content,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
+      },
+      shareLinks: note.shareLinks.map((link) => ({
+        url: `${process.env.CLIENT_URL}/share/${link.token}`,
+        shareType: link.shareType,
+        accessType: link.accessType,
+        expiresAt: link.expiresAt,
+        usedAt: link.usedAt,
+        revokedAt: link.revokedAt,
+        viewCount: link.viewCount,
+        createdAt: link.createdAt,
+      })),
+    });
+  } catch (error) {
+    console.error("Get note error:", error);
+
+    return c.json(
+      {
+        success: false,
+        message: "Unable to fetch note",
+      },
+      500,
+    );
+  }
+});
+
+notesRoutes.post("/:id/revoke", async (c) => {
+  try {
+    const userId = getUserIdFromSession(c);
+
+    if (!userId) {
+      return c.json(
+        {
+          success: false,
+          message: "Authentication required",
+        },
+        401,
+      );
+    }
+
+    const noteId = c.req.param("id");
+
+    const note = await prisma.note.findFirst({
+      where: {
+        id: noteId,
+        ownerId: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!note) {
+      return c.json(
+        {
+          success: false,
+          message: "Note not found",
+        },
+        404,
+      );
+    }
+
+    const result = await prisma.shareLink.updateMany({
+      where: {
+        noteId,
+        revokedAt: null,
+      },
+      data: {
+        revokedAt: new Date(),
+      },
+    });
+
+    if (result.count === 0) {
+      return c.json(
+        {
+          success: false,
+          message: "Share link is already revoked or unavailable",
+        },
+        409,
+      );
+    }
+
+    return c.json({
+      success: true,
+      message: "Share link revoked successfully",
+    });
+  } catch (error) {
+    console.error("Revoke share link error:", error);
+
+    return c.json(
+      {
+        success: false,
+        message: "Unable to revoke share link",
+      },
+      500,
+    );
+  }
+});
+
 export default notesRoutes;

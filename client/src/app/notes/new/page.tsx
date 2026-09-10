@@ -311,6 +311,12 @@ export default function NewNotePage() {
                   can open the protected note.
                 </p>
               </div>
+
+              <Link href={`/notes/${result.note.id}`} className="block">
+                <Button type="button" variant="outline" className="w-full">
+                  Manage note
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         )}
