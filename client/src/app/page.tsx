@@ -44,7 +44,9 @@ export default function Home() {
             <p className="text-xs text-muted-foreground">Secure note sharing</p>
           </div>
 
-          <Button variant="outline">Sign in</Button>
+          <Link href="/login">
+            <Button type="button">Sign in</Button>
+          </Link>
         </div>
       </header>
 

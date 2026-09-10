@@ -100,17 +100,6 @@ export default function NewNotePage() {
 
   return (
     <main className="min-h-screen bg-muted/30">
-      <header className="border-b bg-background">
-        <div className="mx-auto flex max-w-3xl items-center px-6 py-5">
-          <Link href="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to home
-            </Button>
-          </Link>
-        </div>
-      </header>
-
       <section className="mx-auto max-w-3xl px-6 py-10">
         <div className="mb-8">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">

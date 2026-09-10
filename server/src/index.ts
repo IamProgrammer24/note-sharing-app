@@ -11,7 +11,7 @@ const app = new Hono();
 
 // Allow requests from our Next.js client
 app.use(
-  "/api/*",
+  "*",
   cors({
     origin: "http://localhost:3000",
     credentials: true,
